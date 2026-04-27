@@ -3,61 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VerificaJornal | Checagem de Fatos</title>
+    <title>Portal de Checagem | Verificação de Fatos</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; color: #333; display: flex; justify-content: center; padding: 20px; }
-        .container { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); max-width: 600px; width: 100%; }
-        h1 { color: #2c3e50; text-align: center; font-size: 24px; }
-        p { text-align: center; color: #666; }
-        textarea { width: 100%; height: 120px; padding: 12px; border: 1px solid #ddd; border-radius: 8px; margin-top: 10px; resize: none; box-sizing: border-box; }
-        .btn-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
-        button { padding: 12px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; transition: 0.3s; }
-        .btn-lupa { background-color: #e74c3c; color: white; }
-        .btn-google { background-color: #3498db; color: white; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .container { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 90%; max-width: 600px; text-align: center; }
+        h1 { color: #2c3e50; margin-bottom: 5px; }
+        p { color: #7f8c8d; margin-bottom: 20px; }
+        textarea { width: 100%; height: 120px; padding: 15px; border: 1px solid #ddd; border-radius: 8px; resize: none; box-sizing: border-box; font-size: 16px; }
+        .buttons { display: flex; gap: 10px; margin-top: 20px; justify-content: center; }
+        button { padding: 12px 20px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; transition: 0.3s; color: white; flex: 1; }
+        .btn-lupa { background-color: #a94442; }
+        .btn-google { background-color: #5bc0de; }
         button:hover { opacity: 0.8; }
-        .checklist { margin-top: 25px; padding: 15px; background: #f9f9f9; border-left: 4px solid #2ecc71; border-radius: 4px; }
-        h3 { font-size: 16px; margin-top: 0; }
-        .item { font-size: 14px; margin-bottom: 8px; display: flex; align-items: center; }
+        .checklist { text-align: left; margin-top: 25px; background: #f9f9f9; padding: 15px; border-left: 4px solid #2c3e50; border-radius: 4px; }
+        .checklist h3 { margin-top: 0; font-size: 18px; color: #2c3e50; }
+        .item { display: flex; align-items: center; margin-bottom: 8px; font-size: 14px; color: #34495e; }
         input[type="checkbox"] { margin-right: 10px; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>🔍 VerificaJornal</h1>
-    <p>Ferramenta de apoio à veracidade na "Próxima Temporada de Jornalismo".</p>
-    
-    <textarea id="textoNoticia" placeholder="Cole aqui a notícia ou afirmação que deseja verificar..."></textarea>
+    <h1>🔍 Central de Checagem</h1>
+    <p>Ferramenta de apoio à verificação e combate à desinformação.</p>
 
-    <div class="btn-group">
-        <button class="btn-lupa" onclick="checar('lupa')">Checar na Lupa</button>
-        <button class="btn-google" onclick="checar('google')">Google Fact Check</button>
+    <textarea id="noticia" placeholder="Cole aqui a notícia, link ou afirmação que deseja verificar..."></textarea>
+
+    <div class="buttons">
+        <button class="btn-lupa" onclick="buscarNaLupa()">Checar na Lupa</button>
+        <button class="btn-google" onclick="buscarNoGoogle()">Google Fact Check</button>
     </div>
 
     <div class="checklist">
-        <h3>✅ Checklist de Veracidade (David Cohn):</h3>
+        <h3>✅ Critérios de Verificação:</h3>
         <div class="item"><input type="checkbox"> A fonte é identificável e confiável?</div>
-        <div class="item"><input type="checkbox"> O texto usa adjetivos exagerados?</div>
-        <div class="item"><input type="checkbox"> Existe transparência no método de apuração?</div>
-        <div class="item"><input type="checkbox"> A data da notícia é atual?</div>
+        <div class="item"><input type="checkbox"> O texto usa adjetivos exagerados ou alarmistas?</div>
+        <div class="item"><input type="checkbox"> Outros veículos de confiança noticiaram o mesmo?</div>
+        <div class="item"><input type="checkbox"> A data da publicação é atual e condiz com o fato?</div>
+        <div class="item"><input type="checkbox"> As imagens parecem reais ou fora de contexto?</div>
     </div>
 </div>
 
 <script>
-    function checar(plataforma) {
-        const texto = document.getElementById('textoNoticia').value;
-        if (!texto) {
-            alert("Por favor, cole um texto para verificar.");
-            return;
-        }
-        
-        let url = "";
-        if (plataforma === 'lupa') {
-            url = `https://piegas.org/lupa/?s=${encodeURIComponent(texto)}`;
+    function buscarNoGoogle() {
+        let termo = document.getElementById('noticia').value;
+        if (termo) {
+            window.open(`https://toolbox.google.com/factcheck/explorer/search/${encodeURIComponent(termo)};hl=pt-BR`, '_blank');
         } else {
-            url = `https://toolbox.google.com/factcheck/explorer/search/${encodeURIComponent(texto)};hl=pt-BR`;
+            alert("Por favor, cole uma informação primeiro!");
         }
-        window.open(url, '_blank');
+    }
+
+    function buscarNaLupa() {
+        let termo = document.getElementById('noticia').value;
+        if (termo) {
+            window.open(`https://lupa.uol.com.br/busca?q=${encodeURIComponent(termo)}`, '_blank');
+        } else {
+            alert("Por favor, cole uma informação primeiro!");
+        }
     }
 </script>
 
