@@ -19,6 +19,7 @@
         .checklist h3 { margin-top: 0; font-size: 18px; color: #2c3e50; }
         .item { display: flex; align-items: center; margin-bottom: 8px; font-size: 14px; color: #34495e; }
         input[type="checkbox"] { margin-right: 10px; }
+        .dica { font-size: 12px; color: #95a5a6; margin-top: 10px; font-style: italic; }
     </style>
 </head>
 <body>
@@ -27,7 +28,8 @@
     <h1>🔍 Central de Checagem</h1>
     <p>Ferramenta de apoio à verificação e combate à desinformação.</p>
 
-    <textarea id="noticia" placeholder="Cole aqui a notícia, link ou afirmação que deseja verificar..."></textarea>
+    <textarea id="noticia" placeholder="Dica: Cole o título da notícia ou o boato aqui para melhores resultados..."></textarea>
+    <p class="dica">Evite colar links diretos; use palavras-chave ou a manchete.</p>
 
     <div class="buttons">
         <button class="btn-lupa" onclick="buscarNaLupa()">Checar na Lupa</button>
@@ -37,10 +39,9 @@
     <div class="checklist">
         <h3>✅ Critérios de Verificação:</h3>
         <div class="item"><input type="checkbox"> A fonte é identificável e confiável?</div>
-        <div class="item"><input type="checkbox"> O texto usa adjetivos exagerados ou alarmistas?</div>
-        <div class="item"><input type="checkbox"> Outros veículos de confiança noticiaram o mesmo?</div>
-        <div class="item"><input type="checkbox"> A data da publicação é atual e condiz com o fato?</div>
-        <div class="item"><input type="checkbox"> As imagens parecem reais ou fora de contexto?</div>
+        <div class="item"><input type="checkbox"> O texto usa adjetivos exagerados?</div>
+        <div class="item"><input type="checkbox"> Outros veículos noticiaram o mesmo?</div>
+        <div class="item"><input type="checkbox"> A data da publicação é atual?</div>
     </div>
 </div>
 
@@ -48,6 +49,8 @@
     function buscarNoGoogle() {
         let termo = document.getElementById('noticia').value;
         if (termo) {
+            // Se for link, avisar o usuário
+            if (termo.includes("http")) { alert("Para o Google Fact Check, o título da notícia funciona melhor que o link!"); }
             window.open(`https://toolbox.google.com/factcheck/explorer/search/${encodeURIComponent(termo)};hl=pt-BR`, '_blank');
         } else {
             alert("Por favor, cole uma informação primeiro!");
@@ -57,7 +60,12 @@
     function buscarNaLupa() {
         let termo = document.getElementById('noticia').value;
         if (termo) {
-            window.open(`https://lupa.uol.com.br/busca?q=${encodeURIComponent(termo)}`, '_blank');
+            // Se o usuário colou um link, a Lupa costuma dar erro 404. Avisamos para usar o título.
+            if (termo.includes("http")) {
+                alert("A Lupa não encontra links diretos. Cole apenas o TÍTULO da notícia.");
+            } else {
+                window.open(`https://lupa.uol.com.br/busca?q=${encodeURIComponent(termo)}`, '_blank');
+            }
         } else {
             alert("Por favor, cole uma informação primeiro!");
         }
